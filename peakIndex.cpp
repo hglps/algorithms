@@ -22,34 +22,18 @@ int maxHill(vector<int> &a, int start, int end)
         }
         
     }
-    // return -1;
 
 }
 int main()
 {
-  vector<int> array = {};
+  vector<int> array = {0,1,2,3,4,1,0};
   int k, search, i;
-//   for(i=0; i<5; i++)
-//   {
-//    array.push_back(i);
-//  }
-//  for(i=3; i>=0; i--)
-//  {
-//      array.push_back(i);
-//  }
 
   cout << "ARRAY: ";
   for(int i: array){
       cout << i << ", ";
   }
-  // while(true){
-      
-    // cout << "Press -1 to exit.\n";
-    // cout << "To search: ";
-    // cin >> search;
-    
-    // if(search == -1) break;
-    cout << "POSIÇÃO NO ARRAY É = " << maxHill(array, 0, array.size()-1) << "\n";
-  //}
+  
+  cout << "POSIÇÃO NO ARRAY É = " << maxHill(array, 0, array.size()-1) << "\n";
   return 0;
 }
