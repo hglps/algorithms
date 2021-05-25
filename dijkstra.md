@@ -2,7 +2,7 @@
 
 1. Start all nodes with weight= infinity, except the starting node(S).
 
-2. Iterate through all adjacents nodes of starting node, putting on a priority queue, based on their weights ('current distance from S').
+2. Iterate through all adjacents nodes of starting node, putting on a priority queue(increasing order), based on their weights ('current distance from S').
 
 3. Repeat process with first node(i.e. shortest path so far) on the priority queue.
 
