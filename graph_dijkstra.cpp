@@ -37,16 +37,16 @@ class graph{
     public:
         adj_list *vertices[MAX_SIZE];
         short visited[MAX_SIZE];
-        graph(){
-            for(int i=0; i< MAX_SIZE; i++){
+        graph(int n){
+            for(int i=0; i< n; i++){
                 this->vertices[i] = NULL;
                 this->visited[i] = 0;
             }
         }
         
         void add_edge(int item1, int item2, int weight, int directed);
-        void display_nodes();
-        int dijkstra(int source, int target);
+        void display_nodes(int n);
+        int dijkstra(int source, int target, int n);
         void showPathDijkstra(int pred[], int target);
 };
 
@@ -90,9 +90,9 @@ void graph::showPathDijkstra(int pred[], int target)
     std::cout << std::endl;
 }
 
-int graph::dijkstra(int source, int target){
+int graph::dijkstra(int source, int target, int n){
     int cost[MAX_SIZE];
-    for(int i=0; i<MAX_SIZE; i++)
+    for(int i=0; i<n; i++)
         cost[i] = inf;
     std::priority_queue<pairINT, std::vector<pairINT> , increasingPQ > pqueue;
     int pred[MAX_SIZE];
@@ -118,7 +118,6 @@ int graph::dijkstra(int source, int target){
             auxU = auxU->next;
         }
 
-        //pqueue.pop();
     }
 
     showPathDijkstra(pred, target);
@@ -126,8 +125,9 @@ int graph::dijkstra(int source, int target){
     return cost[target];
 }
 
-void graph::display_nodes(){
-    for(int i=0; i< MAX_SIZE; i++){
+void graph::display_nodes(int n){
+    // n vertices
+    for(int i=0; i< n; i++){
         if(this->vertices[i] != NULL){
             adj_list *aux = this->vertices[i];
             std::cout << i << " -> ";
@@ -145,19 +145,33 @@ void graph::display_nodes(){
 
 int main(int argc, const char** argv) {
 
-    graph *gp = new graph();
-    int n, u, v, w;
-    std::cout << "Enter n of paths:\n";
-    std::cin >> n;
-    std::cout <<"Enter " << n << " paths and weight:\n";
-    for(int i=0; i<n; i++){
+    int m, n, u, v, w;
+    std::cout << "Enter n vertices and m paths:\n";
+    std::cin >> n >> m;
+
+    graph *gp = new graph(n);
+
+
+    std::cout <<"Enter " << m << " paths and weight:\n";
+    for(int i=0; i<m; i++){
         std::cin >> u >> v >> w;
-        gp->add_edge(u, v, w, true); // 0 : undirected
+        gp->add_edge(u, v, w, true); // false : undirected
 
     }
-    gp->display_nodes();
-    int dist = gp->dijkstra(0,5);
+    // gp->display_nodes(n);
+    int dist = gp->dijkstra(0,n-1,n);
     std::cout << "Nearest path has total weight: " << dist << std::endl;
 
     return 0;
 }
+
+// 6 9
+// 0 1 9
+// 0 2 8
+// 2 1 2
+// 1 3 4
+// 1 4 4
+// 2 5 3
+// 2 4 5
+// 3 5 5
+// 4 5 6
