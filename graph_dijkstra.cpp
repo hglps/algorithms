@@ -3,10 +3,23 @@
 #include <vector>
 #include <string>
 #include <queue>
+#include <functional>
+#include <utility>
 
 #define MAX_SIZE 100
 #define inf 1e9 //search for better reference of 'infinity'
 typedef std::string string;
+typedef std::pair<int,int> pairINT;
+
+struct increasingPQ {
+    constexpr bool operator()(
+        std::pair<int,int> const& a,
+        std::pair<int,int> const& b)
+        const noexcept
+    {
+        return a.second > b.second;
+    }
+};
 
 class adj_list{
     public:
@@ -34,6 +47,7 @@ class graph{
         void add_edge(int item1, int item2, int weight, int directed);
         void display_nodes();
         int dijkstra(int source, int target);
+        void showPathDijkstra(int pred[], int target);
 };
 
 void graph::add_edge(int item1, int item2, int weight, int directed){
@@ -60,19 +74,40 @@ void graph::add_edge(int item1, int item2, int weight, int directed){
     }
 }
 
+void graph::showPathDijkstra(int pred[], int target)
+{
+    std::vector<int> predecessors;
+    predecessors.push_back(target);
+    for(int i= target; i != 0; i= pred[i]){
+        predecessors.push_back(pred[i]);
+    }
+    std::cout << "Final path= ";
+    for(int i=predecessors.size()-1; i>= 0; i--)
+    {
+        std::cout << predecessors[i];
+        if(i != 0) std::cout << " - ";
+    }
+    std::cout << std::endl;
+}
+
 int graph::dijkstra(int source, int target){
     int cost[MAX_SIZE];
     for(int i=0; i<MAX_SIZE; i++)
         cost[i] = inf;
-    std::priority_queue<std::pair<int, int>> pqueue;
+    std::priority_queue<pairINT, std::vector<pairINT> , increasingPQ > pqueue;
     int pred[MAX_SIZE];
+    pred[0] = -1;
     cost[source] = 0;
     pqueue.push({source, 0});
-
+    
     while(!pqueue.empty()){
         int u = pqueue.top().first;
+        
+        pqueue.pop();
+        
         adj_list *auxU = this->vertices[u];
         while(auxU != NULL){
+
             int v = auxU->item;
             int weightUV = auxU->w;
             if(cost[u] + weightUV < cost[v]){
@@ -83,10 +118,10 @@ int graph::dijkstra(int source, int target){
             auxU = auxU->next;
         }
 
-        pqueue.pop();
+        //pqueue.pop();
     }
 
-    //TODO: fix predecessors array :)
+    showPathDijkstra(pred, target);
 
     return cost[target];
 }
@@ -117,7 +152,7 @@ int main(int argc, const char** argv) {
     std::cout <<"Enter " << n << " paths and weight:\n";
     for(int i=0; i<n; i++){
         std::cin >> u >> v >> w;
-        gp->add_edge(u, v, w, 0); // 0 : undirected
+        gp->add_edge(u, v, w, true); // 0 : undirected
 
     }
     gp->display_nodes();
